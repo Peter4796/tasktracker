@@ -59,7 +59,7 @@ export default function AddTask() {
         <ScrollView style={styles.addTaskContainer}>
             <SafeAreaView />
             <View style={styles.container}>
-                <Text style={styles.textAdd}>Add Task</Text>
+                <Text style={styles.textAdd}>Add Tasks</Text>
             </View>
             <View style={styles.inputContainer}>
                 {inputs.map((input) => (
@@ -113,87 +113,95 @@ export default function AddTask() {
 const styles = StyleSheet.create({
     addTaskContainer: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: Colors.secondary,
     },
     container: {
         flexDirection: "row",
-        paddingHorizontal: 16, // Reduced padding for a tighter layout
+        paddingHorizontal: 20,
         alignItems: "center",
-        justifyContent: "space-between", // Ensures content is well-spaced
+        justifyContent: "center",
         backgroundColor: Colors.primary,
-        paddingVertical: 15, // Uniform vertical padding
-        borderBottomLeftRadius: 12, // Add rounded corners
-        borderBottomRightRadius: 12,
-        shadowColor: "#000", // Add shadow for depth
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3, // Shadow for Android
+        paddingVertical: 20,
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 5,
     },
-
     textAdd: {
-        fontSize: 18,
+        fontSize: 24,
         color: "white",
-        paddingLeft: 120,
         fontWeight: "bold",
     },
     inputContainer: {
         flex: 1,
         paddingHorizontal: 20,
-        paddingTop: 20,
+        paddingTop: 25,
     },
     label: {
-        fontSize: 13,
-        color: "black",
-        fontWeight: "bold",
+        fontSize: 14,
+        color: Colors.primary,
+        fontWeight: "600",
+        marginBottom: 6,
     },
     inputView: {
-        marginTop: 12, // Slightly reduce the margin for better spacing between inputs
-        backgroundColor: "#FFFFFF", // Add a white background to make inputs stand out
-        borderRadius: 10, // Rounded corners for a softer look
-        padding: 10, // Add padding inside the container for a cleaner feel
-        shadowColor: "#000", // Add shadow for depth
+        marginBottom: 20,
+        backgroundColor: "#FFFFFF",
+        borderRadius: 15,
+        padding: 15,
+        shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3, // Elevation for Android
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 3,
     },
     Input: {
-        backgroundColor: Colors.secondary, // Use a light background color for contrast
-        borderRadius: 8, // Match or slightly reduce the radius for consistency
-        paddingHorizontal: 15, // Add horizontal padding for spacious input
-        paddingVertical: 12, // Ensure comfortable vertical padding
-        fontSize: 14, // Slightly larger font for better readability
-        color: "#333", // Darker font color for contrast
-        borderWidth: 1, // Add a subtle border
-        borderColor: "#E0E0E0", // Light gray border for a clean look
-    },
-    calenderImgs: {
-        width: 25,
-        height: 25,
+        backgroundColor: Colors.secondary,
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        fontSize: 16,
+        color: "#2D2D2D",
+        borderWidth: 1,
+        borderColor: "#E8E8E8",
+        marginTop: 4,
     },
     dateView: {
         flexDirection: "row",
-        flex: 1,
         justifyContent: "space-between",
         backgroundColor: Colors.secondary,
-        borderRadius: 10,
-        paddingHorizontal: 10,
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 8,
         alignItems: "center",
-        marginTop: 10,
+        marginTop: 4,
+        borderWidth: 1,
+        borderColor: "#E8E8E8",
     },
     InputDate: {
-        fontSize: 12,
+        fontSize: 16,
+        color: "#2D2D2D",
+        flex: 1,
+        paddingVertical: 6,
     },
     btn: {
         backgroundColor: Colors.primary,
-        padding: 15,
-        borderRadius: 10,
-        marginTop: 25,
+        padding: 18,
+        borderRadius: 15,
+        marginTop: 30,
+        marginBottom: 30,
+        shadowColor: Colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 5,
     },
     btnText: {
         color: "white",
         textAlign: "center",
-        fontWeight: "500",
+        fontWeight: "600",
+        fontSize: 16,
     },
 });
