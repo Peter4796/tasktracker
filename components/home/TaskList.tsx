@@ -12,6 +12,10 @@ interface TaskListProps {
   activeTab: string;
   onFilterChange: (status: string | null) => void;
   theme: ThemeOptions;
+  onStartTask: (taskId: number) => void;
+  onCompleteTask: (taskId: number) => void;
+  onDeleteTask: (taskId: number) => void;
+  onEditTask: (taskId: number) => void;
 }
 
 export const TaskList = ({ 
@@ -19,7 +23,11 @@ export const TaskList = ({
   filteredTasks, 
   activeTab, 
   onFilterChange,
-  theme 
+  theme = 'light',
+  onStartTask,
+  onCompleteTask,
+  onDeleteTask,
+  onEditTask,
 }: TaskListProps) => {
   const styles = createStyles(theme);
 
@@ -35,6 +43,7 @@ export const TaskList = ({
             taskName={item.taskName}
             taskDetails={item.taskDetails}
             taskStatus={item.taskStatus}
+            theme={theme}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -49,9 +58,15 @@ export const TaskList = ({
           {filteredTasks.map((item) => (
             <CustomTaskItem
               key={item.id}
+              id={item.id}
               taskName={item.taskName}
               taskDetails={item.taskDetails}
               myStatus={item?.myStatus || ''}
+              onStart={() => onStartTask(item.id)}
+              onComplete={() => onCompleteTask(item.id)}
+              onDelete={() => onDeleteTask(item.id)}
+              onEdit={() => onEditTask(item.id)}
+              theme={theme}
             />
           ))}
         </ScrollView>

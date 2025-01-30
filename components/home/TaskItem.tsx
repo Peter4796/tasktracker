@@ -1,34 +1,55 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Text from '@/components/text';
+import Icon from '@/components/icon';
 import { Colors } from '@/constants/Colors';
 import { ThemeOptions } from '@/types/theme';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
+import { TaskActionModal } from './TaskActionModal';
 
 interface TaskItemProps {
   taskName: string;
   taskDetails: string;
   taskStatus?: string;
+  theme: ThemeOptions;
 }
 
 interface CustomTaskItemProps {
   taskName: string;
   taskDetails: string;
   myStatus: string;
+  onStart?: () => void;
+  onEdit?: () => void;
+  onDelete: () => void;
+  onComplete?: () => void;
+  id: number;
+  theme: ThemeOptions;
 }
 
-export const TaskItem = memo(({ taskName, taskDetails, taskStatus }: TaskItemProps) => {
-  const styles = useStyles('light');
+const defaultTheme: ThemeOptions = 'light';
+
+export const TaskItem = memo(({ taskName, taskDetails, taskStatus, theme = defaultTheme }: TaskItemProps) => {
+  const styles = createStyles(theme);
   return (
     <View style={styles.taskContainer}>
       <Text style={styles.taskName}>{taskName}</Text>
       <Text style={styles.taskDetails}>{taskDetails}</Text>
-      <Text>Status: {taskStatus}</Text>
+      <Text style={styles.statusText}>Status: {taskStatus}</Text>
     </View>
   );
 });
 
-export const CustomTaskItem = memo(({ taskName, taskDetails, myStatus }: CustomTaskItemProps) => {
-  const styles = useStyles('light');
+export const CustomTaskItem = memo(({ 
+  taskName, 
+  taskDetails, 
+  myStatus,
+  onStart,
+  onEdit,
+  onDelete,
+  onComplete,
+  theme = defaultTheme,
+}: CustomTaskItemProps) => {
+  const styles = createStyles(theme);
+  const [modalVisible, setModalVisible] = useState(false);
   
   const statusColor = useMemo(() => {
     switch (myStatus) {
@@ -39,19 +60,47 @@ export const CustomTaskItem = memo(({ taskName, taskDetails, myStatus }: CustomT
     }
   }, [myStatus]);
 
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete();
+      setModalVisible(false);
+    }
+  };
+
   return (
-    <View style={[styles.taskContainer, { borderColor: statusColor }]}>
-      <Text style={styles.taskName}>{taskName}</Text>
-      <Text style={styles.taskDetails}>{taskDetails}</Text>
-      <View style={styles.statusContainer}>
-        <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
-        <Text style={styles.statusText}>Status: {myStatus}</Text>
+    <>
+      <View style={[styles.taskContainer, { borderColor: statusColor }]}>
+        <View style={styles.taskContent}>
+          <Text style={styles.taskName}>{taskName}</Text>
+          <Text style={styles.taskDetails}>{taskDetails}</Text>
+          <View style={styles.statusContainer}>
+            <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
+            <Text style={styles.statusText}>Status: {myStatus}</Text>
+          </View>
+        </View>
+        <TouchableOpacity 
+          style={styles.moreButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Icon name="ellipsis-vertical" size={20} color={Colors[theme].text} />
+        </TouchableOpacity>
       </View>
-    </View>
+
+      <TaskActionModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        status={myStatus}
+        onStart={onStart}
+        onEdit={onEdit}
+        onDelete={handleDelete}
+        onComplete={onComplete}
+        theme={theme}
+      />
+    </>
   );
 });
 
-const useStyles = (theme: ThemeOptions) => StyleSheet.create({
+const createStyles = (theme: ThemeOptions) => StyleSheet.create({
   taskContainer: {
     marginHorizontal: 5,
     padding: 10,
@@ -65,6 +114,8 @@ const useStyles = (theme: ThemeOptions) => StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   taskName: {
     fontSize: 16,
@@ -92,5 +143,14 @@ const useStyles = (theme: ThemeOptions) => StyleSheet.create({
     fontSize: 12,
     color: Colors[theme].text,
     opacity: 0.7,
+  },
+  taskContent: {
+    flex: 1,
+    marginRight: 8,
+  },
+  moreButton: {
+    padding: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }); 

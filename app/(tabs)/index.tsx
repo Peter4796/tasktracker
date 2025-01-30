@@ -32,7 +32,7 @@ export default function HomeScreen() {
   const navigation = useNavigation();
   const { navigate } = navigation;
 
-  const tasks = [
+  const initialTasks = [
     {
       id: 4,
       taskName: 'Task 1',
@@ -59,7 +59,7 @@ export default function HomeScreen() {
     },
   ];
 
-  const tasksCustom = [
+  const initialTasksCustom = [
     {
       id: 1,
       taskName: 'Task 1',
@@ -93,7 +93,9 @@ export default function HomeScreen() {
     
   ];
 
-  const [filteredTasks, setFilteredTasks] = useState(tasksCustom);
+  const [tasks, setTasks] = useState(initialTasks);
+  const [tasksCustom, setTasksCustom] = useState(initialTasksCustom);
+  const [filteredTasks, setFilteredTasks] = useState(initialTasksCustom);
   const [activeTab, setActiveTab] = useState('All');
 
   const filterTasks = useCallback((myStatus: string | null) => {
@@ -105,7 +107,7 @@ export default function HomeScreen() {
     }
     setFilteredTasks(filtered);
     setActiveTab(myStatus || 'All');
-  }, []);
+  }, [tasksCustom]);
 
   const remainingTasks = useMemo(() => {
     return tasksCustom.filter(task => task.myStatus !== 'Done').length;
@@ -116,8 +118,45 @@ export default function HomeScreen() {
     return Math.round((completedTasks / tasksCustom.length) * 100);
   }, [tasksCustom]);
 
-  const theme = useColorScheme() as ThemeOptions;
+  const colorScheme = useColorScheme();
+  const theme = (colorScheme || 'light') as ThemeOptions;
   const styles = useStyles(theme);
+
+  const handleStartTask = useCallback((taskId: number) => {
+    const updatedTasks = tasksCustom.map(task => 
+      task.id === taskId ? { ...task, myStatus: 'In Progress' } : task
+    );
+    setTasksCustom(updatedTasks);
+    setFilteredTasks(updatedTasks.filter(task => 
+      activeTab === 'All' ? true : task.myStatus === activeTab
+    ));
+  }, [activeTab, tasksCustom]);
+
+  const handleCompleteTask = useCallback((taskId: number) => {
+    const updatedTasks = tasksCustom.map(task => 
+      task.id === taskId ? { ...task, myStatus: 'Done' } : task
+    );
+    setTasksCustom(updatedTasks);
+    setFilteredTasks(updatedTasks.filter(task => 
+      activeTab === 'All' ? true : task.myStatus === activeTab
+    ));
+  }, [activeTab, tasksCustom]);
+
+  const handleDeleteTask = useCallback((taskId: number) => {
+    const updatedTasks = tasksCustom.filter(task => task.id !== taskId);
+    setTasksCustom(updatedTasks);
+    setFilteredTasks(updatedTasks.filter(task => 
+      activeTab === 'All' ? true : task.myStatus === activeTab
+    ));
+  }, [activeTab, tasksCustom]);
+
+  const handleEditTask = useCallback((taskId: number) => {
+    // Navigate to edit screen with task details
+    router.push({
+      pathname: '/AddTask',
+      params: { taskId }
+    });
+  }, []);
 
   return (
     <View style={styles.main}>
@@ -141,6 +180,10 @@ export default function HomeScreen() {
           activeTab={activeTab}
           onFilterChange={filterTasks}
           theme={theme}
+          onStartTask={handleStartTask}
+          onCompleteTask={handleCompleteTask}
+          onDeleteTask={handleDeleteTask}
+          onEditTask={handleEditTask}
         />
       </ScrollView>
     </View>
